@@ -2,8 +2,8 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import nltk
-from textblob import TextBlob
 from nltk.corpus import stopwords
+from langdetect import detect
 
 
 class PreprocessingData:
@@ -55,8 +55,9 @@ class PreprocessingData:
         # remove punctuations
         df_new['lyrics'] = df_new['lyrics'].str.replace('[^\w\s^\']', '')
 
-        # TODO
-        # df_new['language'] = df_new['lyrics'].apply(lambda tweet: TextBlob(tweet).detect_language())
+        # select only english lyrics
+        df_new['language'] = df_new['lyrics'].apply(lambda x: detect(x[:100]))
+        df_new = df_new.loc[df_new['language'] == 'en']
 
         # lemmatization of text
         df_new['text_lemmatized'] = df_new.lyrics.apply(self.lemmatize_text)
