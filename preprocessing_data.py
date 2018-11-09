@@ -14,6 +14,8 @@ df['word_count'] = df['lyrics'].str.split().str.len()
 
 # select only Hip-Hop, Pop & Rock genres
 df = df.loc[df['genre'].isin(['Hip-Hop', 'Pop', 'Rock'])]
+# select song from 2015 onward
+df = df.loc[df['year'] >= 2015]
 
 # plot words per song
 sns.violinplot(x=df["word_count"])
@@ -40,4 +42,4 @@ df_new['lyrics'] = df_new['lyrics'].str.lower()
 # remove punctuations
 df_new['lyrics'] = df_new['lyrics'].str.replace('[^\w\s]', '')
 
-df_new.to_csv('./input/lyrics_clean.csv')
+df_new.to_csv('./input/lyrics_clean_2015_2016.csv')
