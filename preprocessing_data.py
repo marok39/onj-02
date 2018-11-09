@@ -1,45 +1,74 @@
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import nltk
+from textblob import TextBlob
+from nltk.corpus import stopwords
 
 
-# import data
-df = pd.read_csv('./input/lyrics.csv')
+class PreprocessingData:
+    def __init__(self, data):
+        self.data = data
+        self.w_tokenizer = nltk.tokenize.WhitespaceTokenizer()
+        self.lemmatizer = nltk.stem.WordNetLemmatizer()
 
-# replace new lines
-df = df.replace({'\n': ' '}, regex=True)
+    def lemmatize_text(self, text):
+        return [self.lemmatizer.lemmatize(w) for w in self.w_tokenizer.tokenize(text)]
 
-# get word count for songs
-df['word_count'] = df['lyrics'].str.split().str.len()
+    def clean_data(self):
+        # import data
+        df = pd.read_csv(self.data)
 
-# select only Hip-Hop, Pop & Rock genres
-df = df.loc[df['genre'].isin(['Hip-Hop', 'Pop', 'Rock'])]
-# select song from 2015 onward
-df = df.loc[df['year'] >= 2015]
+        # replace new lines
+        df = df.replace({'\n': ' '}, regex=True)
 
-# plot words per song
-sns.violinplot(x=df["word_count"])
-plt.show()
+        # get word count for songs
+        df['word_count'] = df['lyrics'].str.split().str.len()
 
-# use only song with more than 100 words and less than 1000 because of outliers
-df = df[df['word_count'] >= 100]
-df_clean = df[df['word_count'] <= 1000]
-print(df_clean['word_count'].groupby(df_clean['genre']).describe())
+        # select only Hip-Hop, Pop & Rock genres
+        df = df.loc[df['genre'].isin(['Hip-Hop', 'Pop', 'Rock'])]
+        # select song from 2015 onward
+        df = df.loc[df['year'] >= 2015]
 
-# count song by genre
-genre = df_clean.groupby(['genre'], as_index=False).count()
-genre2 = genre[['genre', 'song']]
-print(genre2)
+        # plot words per song
+        # sns.violinplot(x=df["word_count"])
+        # plt.show()
 
-# again plot words per song
-sns.violinplot(x=df_clean["word_count"])
-plt.show()
+        # use only song with more than 100 words and less than 1000 because of outliers
+        df = df[df['word_count'] >= 100]
+        df_clean = df[df['word_count'] <= 1000]
+        print(df_clean['word_count'].groupby(df_clean['genre']).describe())
 
-# remove brackets with text (Ex. [Verse 1])
-df_new = df_clean.replace({'([\[]).*?([\]])': ''}, regex=True)
-# change all text to lower case
-df_new['lyrics'] = df_new['lyrics'].str.lower()
-# remove punctuations
-df_new['lyrics'] = df_new['lyrics'].str.replace('[^\w\s]', '')
+        # count song by genre
+        genre = df_clean.groupby(['genre'], as_index=False).count()
+        genre2 = genre[['genre', 'song']]
+        print(genre2)
 
-df_new.to_csv('./input/lyrics_clean_2015_2016.csv')
+        # again plot words per song
+        # sns.violinplot(x=df_clean["word_count"])
+        # plt.show()
+
+        # remove brackets with text (Ex. [Verse 1])
+        df_new = df_clean.replace({'([\[]).*?([\]])': ''}, regex=True)
+        # change all text to lower case
+        df_new['lyrics'] = df_new['lyrics'].str.lower()
+        # remove punctuations
+        df_new['lyrics'] = df_new['lyrics'].str.replace('[^\w\s^\']', '')
+
+        # TODO
+        # df_new['language'] = df_new['lyrics'].apply(lambda tweet: TextBlob(tweet).detect_language())
+
+        # lemmatization of text
+        df_new['text_lemmatized'] = df_new.lyrics.apply(self.lemmatize_text)
+
+        # remove english stop words
+        stop = stopwords.words('english')
+        df_new['text_lemmatized_without_stop_words'] = df_new['text_lemmatized'].apply(lambda x: [item for item in x if item not in stop])
+
+        df_new.to_csv('./input/lyrics_clean_2015_2016.csv')
+        # df_new.to_csv('./input/lyrics_test.csv')
+
+
+if __name__ == '__main__':
+    pp = PreprocessingData('./input/lyrics.csv')
+    pp.clean_data()
