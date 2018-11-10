@@ -1,7 +1,7 @@
 # Assignment 1: Basic text processing
 
 ## Dataset
-Dataset was obtained on kaggle: https://www.kaggle.com/gyani95/380000-lyrics-from-metrolyrics
+Dataset was obtained on kaggle: [380,000+ lyrics from MetroLyrics dataset](https://www.kaggle.com/gyani95/380000-lyrics-from-metrolyrics).
 
 ## Repo structure
 
