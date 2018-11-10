@@ -69,6 +69,19 @@ class Model(LogisticRegression):
             bottom = keywords[genre]['bottom']
             plot_keywords(top, bottom, self.classes_[genre])
 
+    def keywords_table(self):
+        """print data for latex table"""
+        keywords = self.get_keywords(n=10)
+        for genre in keywords:
+            top = sorted(keywords[genre]['top'], reverse=True)
+            bottom = sorted(keywords[genre]['bottom'])
+            print("\n", self.classes_[genre])
+            print("\hline")
+            print("+ Keywords & Weight & - Keywords & Weight \\\\")
+            print("\hline")
+            for el in zip(top, bottom):
+                print("%s & %.2f & %s & %.2f \\\\" % (el[0][1], el[0][0], el[1][1], el[1][0]))
+
 
 if __name__ == '__main__':
     # model init
@@ -93,3 +106,4 @@ if __name__ == '__main__':
     model.get_metrics(y_test, y_predicted)
     model.plot_confusion_matrix(y_test, y_predicted)
     model.plot_keywords()
+    model.keywords_table()
