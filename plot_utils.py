@@ -83,13 +83,13 @@ def plot_keywords(top, bottom, name):
     plt.barh(y_pos, bottom_scores, align='center', alpha=0.5)
     plt.title('(-) Keywords for ' + name, fontsize=20)
     plt.yticks(y_pos, bottom_words, fontsize=14)
-    plt.xlabel('Weight', fontsize=20)
+    plt.xlabel('Weight', fontsize=14)
 
     plt.subplot(122)
     plt.barh(y_pos, top_scores, align='center', alpha=0.5)
     plt.title('(+) Keywords for ' + name, fontsize=20)
     plt.yticks(y_pos, top_words, fontsize=14)
-    plt.xlabel('Weight', fontsize=20)
+    plt.xlabel('Weight', fontsize=14)
 
     plt.subplots_adjust(wspace=0.8)
     plt.show()
