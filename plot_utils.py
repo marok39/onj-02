@@ -74,10 +74,8 @@ def plot_confusion_matrix(cm, classes, title='Confusion matrix', cmap=None, norm
 def plot_keywords(top, bottom, name):
     y_pos = np.arange(len(top))
 
-    top_scores = [a[0] for a in top]
-    top_words = [a[1] for a in top]
-    bottom_scores = [a[0] for a in bottom]
-    bottom_words = [a[1] for a in bottom]
+    top_scores, top_words = zip(*top)
+    bottom_scores, bottom_words = zip(*bottom)
 
     fig = plt.figure(figsize=(10, 10))
 
