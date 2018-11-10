@@ -62,7 +62,8 @@ class PreprocessingData:
         # select only english lyrics
         for row in df_new.itertuples(index=True, name='Pandas'):
             try:
-                if detect(getattr(row, "lyrics")[:200]) != 'en' or detect(getattr(row, "lyrics")[200:400]) != 'en':
+                # if detect(getattr(row, "lyrics")[:200]) != 'en' or detect(getattr(row, "lyrics")[200:400]) != 'en':
+                if detect(getattr(row, "lyrics")[:400]) != 'en':
                     df_new.drop(getattr(row, "index"), inplace=True)
             except:
                 df_new.drop(getattr(row, "index"), inplace=True)
