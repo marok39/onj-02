@@ -1,0 +1,131 @@
+% To je predloga za poročila o domačih nalogah pri predmetih, katerih
+% nosilec je Tomaž Curk. Avtor predloge je Blaž Zupan.
+%
+% Seveda lahko tudi dodaš kakšen nov, zanimiv in uporaben element,
+% ki ga v tej predlogi (še) ni. Več o LaTeX-u izveš na
+% spletu, na primer na http://tobi.oetiker.ch/lshort/lshort.pdf.%
+% To predlogo lahko spremeniš v PDF dokument s pomočjo programa
+% pdflatex, ki je del standardne instalacije LaTeX programov.
+
+\documentclass[a4paper,11pt]{article}
+\usepackage{a4wide}
+\usepackage{fullpage}
+\usepackage[utf8x]{inputenc}
+\usepackage[english]{babel}
+\selectlanguage{english}
+\usepackage[toc,page]{appendix}
+\usepackage[pdftex]{graphicx} % za slike
+\usepackage{setspace}
+\usepackage{color}
+\definecolor{light-gray}{gray}{0.95}
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily,
+  columns=fullflexible,
+  frame=single,
+  breaklines=true,
+  postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+}
+\usepackage{hyperref}
+\renewcommand{\baselinestretch}{1.2} % za boljšo berljivost večji razmak
+\renewcommand{\appendixpagename}{Appendix}
+
+\lstset{ % nastavitve za izpis kode, sem lahko tudi kaj dodaš/spremeniš
+language=Python,
+basicstyle=\footnotesize,
+basicstyle=\ttfamily\footnotesize\setstretch{1},
+backgroundcolor=\color{light-gray},
+}
+
+\title{%
+Analysis of song lyrics to match genre \\
+\large Assignment 1: Basic text processing}
+\author{Jernej Janež (63130077), Rok Marinšek (63130146), Luka Podgoršek (63130189)}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{NLP task}
+% A paragraph of an NLP task/idea that you solved. A short description of your solution and related work in the field.
+For our assignment we decided to analyze song lyrics, extract keywords that correspond to specific genres and try to classify song by its lyrics to corresponding genre. First we found a \href{https://www.kaggle.com/gyani95/380000-lyrics-from-metrolyrics}{dataset} that cointained song lyrics. We preprocessed data, trained and tested a model and presented results with graphs. Some similar solutions already exist but perform similar task with neural networks or some other more complex methods. With this assignment we wanted to find out if our aproach can provide satisfactory results by using simple natural language processing techniques.
+
+\section{Data}
+% A description of (train, development, test) data or its retrieval
+% Also describe metrics, used to score the performance of your algorithms.
+We searched the internet for appropriate dataset. We found many different but in the end decided to use \href{https://www.kaggle.com/gyani95/380000-lyrics-from-metrolyrics}{\textit{380,000+ lyrics from MetroLyrics dataset}} found on kaggle portal. This dataset had the attributes we needed to solve our task.
+
+Dataset contained following attributes:
+\begin{itemize}
+\item song title,
+\item year,
+\item artist
+\item genre,
+\item lyrics.
+\end{itemize}
+
+\subsection{Data preparation}
+Data we found was stored in \textit{.csv} file. Because it contained more than \textit{380 000} entries we decided to analyze songs that we're released in 2016 (latest songs in dataset). Afterwards we filtered songs to match predefind genres. We selected \textit{Hip-Hop, Pop  and metal} and ended up with \textit{6845} different songs. Then we removed lyrics that we're shorter than 100 words and longer than 1000 words. This way we removed outliers in data.
+
+When we finished data preparation and selection we focused on the text preparation. First we removed special characters from text with regular expressions, converted words to lowercase and removed punctuations. Finally we removed non-english songs. This way we ended up with \textbf{5613} different songs.
+
+\begin{table}[h!]
+\centering
+\label{baseline}
+\begin{tabular}{clc}
+\hline
+\# & Genre & Number of different songs \\
+\hline
+0 & Hip-Hop & 2180 \\
+1 & Metal & 814 \\
+2 & Pop & 2619 \\
+\end{tabular}
+\caption{Number of songs per genre}
+\end{table}
+
+In the end we saved filtered data into \textit{.csv} file. In our model class we used this file as input to train our model. You can also use this file to replicate our results.
+
+\section{Model}
+
+To train our model we used preprocessed file. Model is build with logistic regression.
+
+\subsection{Train, test data and metrics}
+% 80 20, regressing 0.2
+% A description of (train, development, test) data or its retrieval. Also describe metrics, used to score the performance of your algorithms.
+To train our model we used 80\% of data and 20\% to test our model. To measure score and performance of our model we used following metrics:
+\begin{itemize}
+\item accuracy,
+\item precision,
+\item recall,
+\item and f1 score.
+\end{itemize}
+
+In development phase we also played with regularization factor. We used above mentioned metrics to determine best regularization factor. In the end we set it to 1 (TODO UPDATE TO PROPER VALUE).
+
+\subsection{Resources, tools and corpora}
+%A description of tools and resources used. A list of additional linguistic corpora and how it was used to improve results of your algorithm
+
+We used several different python libraries. Pandas was used for data structures and data purging. Nltk corpus was used to determine stopwords and for lematization. Langdetect library was used to remove non-english lyrics. To build our model we used sklearn and preseted results with matplotlib.
+
+\section{Algorithm-Model description}
+% describe how we build our model
+
+
+\section{Results}
+% todo
+
+\section{Github repository}
+Github repository: \href{https://github.com/marok39/onj-02}{https://github.com/marok39/onj-02}
+
+
+\pagebreak
+\appendix
+\appendixpage
+\section{\label{label-tmp} Tmp}
+\begin{lstlisting}
+# comment
+\end{lstlisting}
+
+
+\end{document}
