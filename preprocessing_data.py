@@ -60,13 +60,19 @@ class PreprocessingData:
         df_new['lyrics'] = df_new['lyrics'].str.replace('[^\w\s^\']', '')
 
         # select only english lyrics
-        # TODO: vcasih vrze langdetect.lang_detect_exception.LangDetectException: No features in text., vrjetn bo treba for pa catch exception
-        df_new['language'] = df_new['lyrics'].apply(lambda x: detect(x[:100]))
-        df_new = df_new.loc[df_new['language'] == 'en']
-        """
-        # lemmatization of text
-        df_new['text_lemmatized'] = df_new.lyrics.apply(self.lemmatize_text)
+        for row in df_new.itertuples(index=True, name='Pandas'):
+            try:
+                if detect(getattr(row, "lyrics")[:200]) != 'en' or detect(getattr(row, "lyrics")[200:400]) != 'en':
+                    df_new.drop(getattr(row, "index"), inplace=True)
+            except:
+                df_new.drop(getattr(row, "index"), inplace=True)
 
+        # df_new['language'] = df_new['lyrics'].apply(lambda x: detect(x[:100]))
+        # df_new = df_new.loc[df_new['language'] == 'en']
+
+        # lemmatization of text & remove stop words
+        df_new['text_lemmatized'] = df_new.lyrics.apply(self.lemmatize_text)
+        """
         # remove english stop words
         stop = stopwords.words('english')
         df_new['text_lemmatized_without_stop_words'] = df_new['text_lemmatized'].apply(lambda x: [item for item in x if item not in stop])
