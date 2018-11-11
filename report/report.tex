@@ -109,14 +109,23 @@ In development phase we also played with regularization factor. We used above me
 
 We used several different python libraries. Pandas was used for data structures and data purging. Nltk corpus was used to determine stopwords and for lemmatization. Langdetect library was used to remove non-english lyrics. To build our model we used sklearn and presented results with matplotlib.
 
-\section{Algorithm-Model description}
+\section{Algorithm description}
 % describe how we build our model
 
 % we used l regression-.....
 
-\subsection{Building bag of words with TF-IDF}
-Bag of words is an algorithm that counts how many times a word appears in a document. We used WhitespaceTokenizer function from the ntlk library to tokenize our song lyrics and removed all the stop words, because words such as \textit{"and"} or \textit{"the"} appear frequently in all songs and are systematically discounted. Then we used the WordNetLemmatizer function also from the nltk library to lemmatize the text which grouped together the different inflected forms of a word so they can be analyzed as a single item. After that we vectorized our data with TF-IDF function called TfidfVectorizer from sklearn which measured the number of times words appeared in a given song (term frequency). The more songs a word appears in, the less valuable that word is as a signal. That’s intended to leave only the frequent AND distinctive words as markers. Each word’s TF-IDF relevance is a normalized data format that also adds up to one.
+\subsection{Data feature extraction}
+\label{feature-extraction}
+Features were determined by the Bag-Of-Words approach using the data of column \textit{lyrics}.
+Our tokenizer has three roles: tokenize words using whitespaces (NLTK's WhitespaceTokenizer), ignore stopwords and lemmatize each word.
+Each extracted feature has a corresponding TF-IDF value (using sklearn's TfidfVectorizer).
 
+\subsection{Model}
+Our training data was constructed using the approach described in \ref{feature-extraction}.
+To train our model for genre prediction we used sklearn's multinomial LogisticRegression classifer. 
+
+To determine keywords for each genre we simply looked at the trained models weights and connected them to the corresponding feature.
+We decided to show only the 10 most significant words with the highest positive and negative weights, thinking those words represent the genre best.
 
 \section{Results}
 % interpretacija modela, kaj je primerom skupno, zakaj pride do napačne klasifikacije
