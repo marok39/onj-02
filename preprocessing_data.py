@@ -7,7 +7,7 @@ from langdetect import detect
 
 PRESELECTED_GENRES = ['Hip-Hop', 'Pop', 'Metal']
 BLACKLIST_GENRES = ['Other', 'Electronic', 'Not Available']
-YEAR = 2006
+YEAR = 2000
 
 
 class PreprocessingData:
@@ -67,7 +67,7 @@ class PreprocessingData:
         df_new['lyrics'] = df_new['lyrics'].astype('U')
 
         # select only english lyrics
-        print("Filtering non-english songs (needs ~40 seconds)...")
+        print("Filtering non-english songs (be patient)...")
         index_to_drop = []
         for i, row in enumerate(df_new.itertuples(index=True, name='Pandas')):
             try:

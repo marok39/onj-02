@@ -29,5 +29,5 @@ This script will train a model and plot results.
 
 `python model.py`
 
-If you edited preprocessing_data.py file change file name in model.py to include new data. By default it uses _lyrics_clean_2015.csv_ file
+If you edited preprocessing_data.py file change file name in model.py to include new data. By default it uses _lyrics_clean_2000.csv_ file
 

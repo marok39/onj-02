@@ -75,7 +75,10 @@ class Model(LogisticRegression):
         plot_confusion_matrix(cm, classes=self.classes_, normalize=False)
 
     def plot_keywords(self):
-        keywords = self.get_keywords(n=10)
+        if not self.keywords:
+            keywords = self.get_keywords(n=10)
+        else:
+            keywords = self.keywords
         for genre in keywords:
             top = keywords[genre]['top']
             bottom = keywords[genre]['bottom']
@@ -83,7 +86,10 @@ class Model(LogisticRegression):
 
     def keywords_table(self):
         """print data for latex table"""
-        keywords = self.get_keywords(n=10)
+        if not self.keywords:
+            keywords = self.get_keywords(n=10)
+        else:
+            keywords = self.keywords
         for genre in keywords:
             top = sorted(keywords[genre]['top'], reverse=True)
             bottom = sorted(keywords[genre]['bottom'])
@@ -155,17 +161,21 @@ class Model(LogisticRegression):
 if __name__ == '__main__':
     # model init
     model = Model(C=1e-1, class_weight='balanced', solver='lbfgs', multi_class='multinomial', max_iter=200)
-    df = pd.read_csv('./input/lyrics_clean_2016.csv')
-    #pp = PreprocessingData(data='./input/lyrics.csv')
-    #df = pp.clean_data()
+    df = pd.read_csv('./input/lyrics_clean_2000.csv')
 
     list_genres = df['genre'].tolist()
     list_lyrics = df['lyrics'].tolist()
 
-    y_test, y_predicted = model.test_model(list_lyrics, list_genres, n=1)
+    # model testing
+    # model.test_model(list_lyrics, list_genres, n=10)
+
+    # Final model with predefined seed (for results replication)
+    y_test, y_predicted = model.test_model(list_lyrics, list_genres, n=1, seed=123)
 
     # plot model
     model.plot_confusion_matrix(y_test, y_predicted)
     model.plot_keywords()
-    model.keywords_table()
-    model.pos_keywords_table()
+
+    # Helpers for latex tables
+    # model.keywords_table()
+    # model.pos_keywords_table()
