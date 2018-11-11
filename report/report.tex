@@ -56,7 +56,7 @@ For our assignment we decided to analyze song lyrics, extract keywords that corr
 % Also describe metrics, used to score the performance of your algorithms.
 We searched the internet for appropriate dataset. We found many different but in the end decided to use \href{https://www.kaggle.com/gyani95/380000-lyrics-from-metrolyrics}{\textit{380,000+ lyrics from MetroLyrics dataset}} found on kaggle portal. This dataset had the attributes we needed to solve our task.
 
-Dataset contained following attributes:
+\noindent Dataset contained following attributes:
 \begin{itemize}
 \item song title,
 \item year,
@@ -66,7 +66,7 @@ Dataset contained following attributes:
 \end{itemize}
 
 \subsection{Data preparation}
-Data we found was stored in \textit{.csv} file. Because it contained more than \textit{380 000} entries we decided to analyze songs that we're released in 2016 (latest songs in dataset). Afterwards we filtered songs to match predefind genres. We selected \textit{Hip-Hop, Pop  and metal} and ended up with \textit{6845} different songs. Then we removed lyrics that we're shorter than 100 words and longer than 1000 words. This way we removed outliers in data.
+Data we found was stored in \textit{.csv} file. Because it contained more than \textit{380 000} entries we decided to analyze songs that we're released in 2016 (latest songs in dataset). Afterwards we filtered songs to match predefind genres. We selected \textit{hip-hop, pop  and metal} and ended up with \textit{6845} different songs. Then we removed lyrics that we're shorter than 100 words and longer than 1000 words. This way we removed outliers in data.
 
 When we finished data preparation and selection we focused on the text preparation. First we removed special characters from text with regular expressions, converted words to lowercase and removed punctuations. Finally we removed non-english songs. This way we ended up with \textbf{5613} different songs.
 
@@ -111,21 +111,145 @@ We used several different python libraries. Pandas was used for data structures 
 \section{Algorithm-Model description}
 % describe how we build our model
 
-
+\pagebreak
 \section{Results}
-% todo
+% interpretacija modela, kaj je primerom skupno, zakaj pride do napačne klasifikacije
 
+Before we could interprete our model and it's predictions we had to test it. Testing phase consisted of 10 iterations. In each iteration we sampled data with different random seed, trained a model and tested it on sampled test data. In the end we averaged all metrics to score performance of our model. You can find results in \hyperref[label-model-score]{table} bellow.
+
+\begin{table}[h!]
+\centering
+\label{baseline}
+\begin{tabular}{cccc}
+\hline
+Accuracy & Precision & recall & f1 \\
+\hline
+0.799 & 0.803 & 0.799 & 0.800 \\
+\end{tabular}
+\label{label-model-score}
+\caption{Model scores}
+\end{table}
+
+Beside performance scores our model returned list of keywords that have the most and the least value for classification. These results are presented in tables bellow. Graphical presetation of tables is included in appendix \hyperref[label-graphs]{graphs section.}
+
+\begin{table}[h!]
+\centering
+\label{baseline}
+\begin{tabular}{cccc}
+\hline
++ Keywords & Weight & - Keywords & Weight \\
+\hline
+love & 1.60 & nigga & -2.95 \\
+heart & 1.46 & shit & -2.17 \\
+good & 1.28 & fuck & -2.15 \\
+oh & 1.21 & bitch & -2.00 \\
+miss & 1.18 & end & -1.84 \\
+boy & 1.17 & dead & -1.59 \\
+hurt & 1.07 & hell & -1.44 \\
+blue & 1.03 & death & -1.38 \\
+hey & 1.02 & die & -1.20 \\
+goodbye & 1.00 & yo & -1.19 \\
+\end{tabular}
+\caption{Keywords for pop}
+\end{table}
+
+\begin{table}[h!]
+\centering
+\label{baseline}
+\begin{tabular}{cccc}
+\hline
++ Keywords & Weight & - Keywords & Weight \\
+\hline
+end & 2.46 & love & -2.49 \\
+dead & 2.18 & like & -2.19 \\
+hell & 1.77 & got & -2.01 \\
+death & 1.76 & ain't & -1.99 \\
+nothing & 1.65 & baby & -1.81 \\
+fear & 1.52 & yeah & -1.77 \\
+lie & 1.50 & nigga & -1.48 \\
+eye & 1.45 & good & -1.39 \\
+die & 1.38 & boy & -1.35 \\
+memory & 1.37 & girl & -1.32 \\
+\end{tabular}
+\caption{Keywords for metal}
+\end{table}
+
+\begin{table}[h!]
+\centering
+\label{baseline}
+\begin{tabular}{cccc}
+\hline
++ Keywords & Weight & - Keywords & Weight \\
+\hline
+nigga & 4.42 & nothing & -1.36 \\
+ain't & 2.92 & forget & -1.32 \\
+bitch & 2.34 & world & -1.21 \\
+shit & 2.13 & i've & -1.13 \\
+got & 2.11 & angel & -0.97 \\
+fuck & 1.99 & believe & -0.95 \\
+gon' & 1.87 & light & -0.95 \\
+like & 1.81 & memory & -0.90 \\
+money & 1.66 & we'll & -0.89 \\
+man & 1.54 & care & -0.88 \\
+\end{tabular}
+\caption{Keywords for hip-hop}
+\end{table}
+
+
+%\begin{table}[h!]
+%\centering
+%\label{baseline}
+%\begin{tabular}{cccc}
+%\end{tabular}
+%\caption{Keywords for hip-hop}
+%\end{table}
+
+\pagebreak
 \section{Github repository}
 Github repository: \href{https://github.com/marok39/onj-02}{https://github.com/marok39/onj-02}
 
 
-\pagebreak
 \appendix
 \appendixpage
-\section{\label{label-tmp} Tmp}
-\begin{lstlisting}
-# comment
-\end{lstlisting}
+\section{\label{label-graphs} Graphs}
+
+Here you can find visualization of all results. These files can be found alongside report in /img directory.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=0.8\textwidth]{./img/matrix.png}
+\end{center}
+\caption{Confisuin matrix}
+\label{report}
+\end{figure}
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=0.8\textwidth]{./img/pop-keywords.png}
+\end{center}
+\caption{Keywords visualization for pop}
+\label{report}
+\end{figure}
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=0.8\textwidth]{./img/hip-hop-keywords.png}
+\end{center}
+\caption{Keywords visualization for hip-hop}
+\label{report}
+\end{figure}
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=0.8\textwidth]{./img/metal-keywords.png}
+\end{center}
+\caption{Keywords visualization for metal}
+\label{report}
+\end{figure}
+
+%\begin{lstlisting}
+%# comment
+%\end{lstlisting}
 
 
 \end{document}
