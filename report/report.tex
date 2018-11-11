@@ -114,9 +114,7 @@ We used several different python libraries. Pandas was used for data structures 
 % we used l regression-.....
 
 \subsection{Building bag of words with TF-IDF}
-% jerry
-
-
+Bag of words is an algorithm that counts how many times a word appears in a document. We used WhitespaceTokenizer function from the ntlk library to tokenize our song lyrics and removed all the stop words, because words such as \textit{"and"} or \textit{"the"} appear frequently in all songs and are systematically discounted. Then we used the WordNetLemmatizer function also from the nltk library to lemmatize the text which grouped together the different inflected forms of a word so they can be analyzed as a single item. After that we vectorized our data with TF-IDF function called TfidfVectorizer from sklearn which measured the number of times words appeared in a given song (term frequency). The more songs a word appears in, the less valuable that word is as a signal. That’s intended to leave only the frequent AND distinctive words as markers. Each word’s TF-IDF relevance is a normalized data format that also adds up to one.
 
 \pagebreak
 \section{Results}
