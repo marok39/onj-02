@@ -132,19 +132,70 @@ class Model(LogisticRegression):
             for a in adjectives:
                 print("%s & %.2f \\\\" % (a[1], a[0]))
 
-    def test_model(self, data, labels, n=1, seed=None):
+    def check_wrong_classified(self, df, y_test, y_predicted, y_probability, id_test):
+        hhp = pd.DataFrame()
+        pm = pd.DataFrame()
+        hhp_coef_hip_hop = []
+        hhp_coef_pop = []
+        pm_coef_pop = []
+        pm_coef_metal = []
+        for i in range(len(y_test)):
+            if y_test[i] == 'Hip-Hop' and y_predicted[i] == 'Pop':
+                hhp = hhp.append(df.loc[[id_test[i]]])
+                hhp_coef_hip_hop.append(y_probability[i][0])
+                hhp_coef_pop.append(y_probability[i][2])
+
+            if y_test[i] == 'Pop' and y_predicted[i] == 'Metal':
+                pm = pm.append(df.loc[[id_test[i]]])
+                pm_coef_pop.append(y_probability[i][2])
+                pm_coef_metal.append(y_probability[i][1])
+
+        hhp = hhp.drop(columns=['lyrics', 'word_count', 'text_lemmatized'])
+        pm = pm.drop(columns=['lyrics', 'word_count', 'text_lemmatized'])
+
+        hhp_diff = [y - x for x, y in zip(hhp_coef_hip_hop, hhp_coef_pop)]
+        pm_diff = [y - x for x, y in zip(pm_coef_pop, pm_coef_metal)]
+
+        se = pd.Series(hhp_coef_hip_hop)
+        hhp['coeficient_hip_hop'] = se.values
+        se = pd.Series(hhp_coef_pop)
+        hhp['coeficient_pop'] = se.values
+        se = pd.Series(hhp_diff)
+        hhp['coeficient_diff'] = se.values
+        hhp.sort_values("coeficient_diff", inplace=True)
+        hhp_top = hhp.head(100)
+        hhp_bottom = hhp.tail(100)
+        hhp_new = hhp_top.append(hhp_bottom)
+
+        hhp_new.to_csv("hip-hop_pop.csv")
+
+        se = pd.Series(pm_coef_pop)
+        pm['coeficient_pop'] = se.values
+        se = pd.Series(pm_coef_metal)
+        pm['coeficient_metal'] = se.values
+        se = pd.Series(pm_diff)
+        pm['coeficient_diff'] = se.values
+        pm.sort_values("coeficient_diff", inplace=True)
+        pm_top = pm.head(100)
+        pm_bottom = pm.tail(100)
+        pm_new = pm_top.append(pm_bottom)
+
+        pm_new.to_csv("pop_metal.csv")
+
+    def test_model(self, data, labels, indices, n=1, seed=None):
         """Print average metrics over n iterations."""
         a_sum, p_sum, r_sum, f_sum = 0, 0, 0, 0
 
         for i in range(n):
             # train model
-            X_train, X_test, y_train, y_test = train_test_split(data, labels, test_size=0.2, random_state=seed)
+            X_train, X_test, y_train, y_test, id_train, id_test = train_test_split(data, labels, indices, test_size=0.2, random_state=seed)
             X_train = self.vectorize_data(X_train)
             model.fit(X_train, y_train)
 
             # predict genres
             X_test = self.vectorizer.transform(X_test)
             y_predicted = self.predict(X_test)
+            y_probability = model.predict_proba(X_test)
 
             a, p, r, f = self.get_metrics(y_test, y_predicted)
             a_sum += a
@@ -155,26 +206,29 @@ class Model(LogisticRegression):
         print('Average over %d iterations: acc = %.3f, prec = %.3f, rec = %.3f, f1 = %.3f' %
               (n, a_sum/n, p_sum/n, r_sum/n, f_sum/n))
 
-        return y_test, y_predicted
+        return y_test, y_predicted, y_probability, id_test
 
 
 if __name__ == '__main__':
     # model init
     model = Model(C=1e-1, class_weight='balanced', solver='lbfgs', multi_class='multinomial', max_iter=200)
-    df = pd.read_csv('./input/lyrics_clean_2000.csv')
+    df = pd.read_csv('./input/lyrics_clean_2015_2016.csv')
 
     list_genres = df['genre'].tolist()
     list_lyrics = df['lyrics'].tolist()
+    idx = list(range(len(list_genres)))
 
     # model testing
     # model.test_model(list_lyrics, list_genres, n=10)
 
     # Final model with predefined seed (for results replication)
-    y_test, y_predicted = model.test_model(list_lyrics, list_genres, n=1, seed=123)
+    y_test, y_predicted, y_probability, id_test = model.test_model(list_lyrics, list_genres, idx, n=1, seed=123)
 
     # plot model
     model.plot_confusion_matrix(y_test, y_predicted)
     model.plot_keywords()
+
+    model.check_wrong_classified(df, y_test, y_predicted, y_probability, id_test)
 
     # Helpers for latex tables
     # model.keywords_table()
