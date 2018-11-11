@@ -4,6 +4,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, confusion_matrix
+import nltk
 
 from plot_utils import plot_confusion_matrix, plot_keywords
 from preprocessing_data import PreprocessingData
@@ -13,6 +14,7 @@ class Model(LogisticRegression):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.vectorizer = None
+        self.keywords = None
 
     def vectorize_data(self, data):
         """Vectorizes data with TF-IDF."""
@@ -29,14 +31,24 @@ class Model(LogisticRegression):
 
         keywords = {}
         for class_index in range(self.coef_.shape[0]):
-            word_coef = [(coef, index_to_word[i]) for i, coef in enumerate(self.coef_[class_index])]
+            word_coef = [(coef, nltk.pos_tag([index_to_word[i]])[0]) for i, coef in enumerate(self.coef_[class_index])]
             sorted_coef = sorted(word_coef, key=lambda x: x[0], reverse=True)
+
+            top_nouns = [(coef, pos[0]) for coef, pos in sorted_coef if 'NN' in pos[1]][:n]
+            top_adjectives = [(coef, pos[0]) for coef, pos in sorted_coef if 'JJ' in pos[1]][:n]
+            top_verbs = [(coef, pos[0]) for coef, pos in sorted_coef if 'VB' in pos[1]][:n]
+
             top = sorted(sorted_coef[:n], key=lambda x: x[0])
             bottom = sorted_coef[-n:]
+
             keywords[class_index] = {
                 'top': top,
-                'bottom': bottom
+                'bottom': bottom,
+                'top_nouns': top_nouns,
+                'top_adjectives': top_adjectives,
+                'top_verbs': top_verbs
             }
+        self.keywords = keywords
         return keywords
 
     @staticmethod
@@ -80,7 +92,39 @@ class Model(LogisticRegression):
             print("+ Keywords & Weight & - Keywords & Weight \\\\")
             print("\hline")
             for el in zip(top, bottom):
-                print("%s & %.2f & %s & %.2f \\\\" % (el[0][1], el[0][0], el[1][1], el[1][0]))
+                print("%s & %.2f & %s & %.2f \\\\" % (el[0][1][0], el[0][0], el[1][1][0], el[1][0]))
+
+    def pos_keywords_table(self):
+        """Print tagged keywords for latex table."""
+        for genre in self.keywords:
+            verbs = self.keywords[genre]['top_verbs']
+            nouns = self.keywords[genre]['top_nouns']
+            adjectives = self.keywords[genre]['top_adjectives']
+
+            print(verbs)
+            print(nouns)
+            print(adjectives)
+
+            print("\n", self.classes_[genre])
+            print("\hline")
+            print("Top verbs & Weight \\\\")
+            print("\hline")
+            for v in verbs:
+                print("%s & %.2f \\\\" % (v[1], v[0]))
+
+            print("\n", self.classes_[genre])
+            print("\hline")
+            print("Top nouns & Weight \\\\")
+            print("\hline")
+            for n in nouns:
+                print("%s & %.2f \\\\" % (n[1], n[0]))
+
+            print("\n", self.classes_[genre])
+            print("\hline")
+            print("Top adjectives & Weight \\\\")
+            print("\hline")
+            for a in adjectives:
+                print("%s & %.2f \\\\" % (a[1], a[0]))
 
     def test_model(self, data, labels, n=1, seed=None):
         """Print average metrics over n iterations."""
@@ -111,16 +155,17 @@ class Model(LogisticRegression):
 if __name__ == '__main__':
     # model init
     model = Model(C=1e-1, class_weight='balanced', solver='lbfgs', multi_class='multinomial', max_iter=200)
-    df = pd.read_csv('./input/lyrics_clean_2014.csv')
+    df = pd.read_csv('./input/lyrics_clean_2016.csv')
     #pp = PreprocessingData(data='./input/lyrics.csv')
     #df = pp.clean_data()
 
     list_genres = df['genre'].tolist()
     list_lyrics = df['lyrics'].tolist()
 
-    y_test, y_predicted = model.test_model(list_lyrics, list_genres, n=2)
+    y_test, y_predicted = model.test_model(list_lyrics, list_genres, n=1)
 
     # plot model
     model.plot_confusion_matrix(y_test, y_predicted)
     model.plot_keywords()
     model.keywords_table()
+    model.pos_keywords_table()
