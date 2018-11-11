@@ -139,6 +139,7 @@ class Model(LogisticRegression):
         hhp_coef_pop = []
         pm_coef_pop = []
         pm_coef_metal = []
+
         for i in range(len(y_test)):
             if y_test[i] == 'Hip-Hop' and y_predicted[i] == 'Pop':
                 hhp = hhp.append(df.loc[[id_test[i]]])
@@ -149,9 +150,6 @@ class Model(LogisticRegression):
                 pm = pm.append(df.loc[[id_test[i]]])
                 pm_coef_pop.append(y_probability[i][2])
                 pm_coef_metal.append(y_probability[i][1])
-
-        hhp = hhp.drop(columns=['lyrics', 'word_count', 'text_lemmatized'])
-        pm = pm.drop(columns=['lyrics', 'word_count', 'text_lemmatized'])
 
         hhp_diff = [y - x for x, y in zip(hhp_coef_hip_hop, hhp_coef_pop)]
         pm_diff = [y - x for x, y in zip(pm_coef_pop, pm_coef_metal)]
@@ -212,7 +210,7 @@ class Model(LogisticRegression):
 if __name__ == '__main__':
     # model init
     model = Model(C=1e-1, class_weight='balanced', solver='lbfgs', multi_class='multinomial', max_iter=200)
-    df = pd.read_csv('./input/lyrics_clean_2015_2016.csv')
+    df = pd.read_csv('./input/lyrics_clean_2006.csv')
 
     list_genres = df['genre'].tolist()
     list_lyrics = df['lyrics'].tolist()
