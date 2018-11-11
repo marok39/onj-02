@@ -111,6 +111,13 @@ We used several different python libraries. Pandas was used for data structures 
 \section{Algorithm-Model description}
 % describe how we build our model
 
+% we used l regression-.....
+
+\subsection{Building bag of words with TF-IDF}
+% jerry
+
+
+
 \pagebreak
 \section{Results}
 % interpretacija modela, kaj je primerom skupno, zakaj pride do napačne klasifikacije
@@ -124,13 +131,22 @@ Before we could interprete our model and it's predictions we had to test it. Tes
 \hline
 Accuracy & Precision & recall & f1 \\
 \hline
-0.799 & 0.803 & 0.799 & 0.800 \\
+0.736 & 0.769 & 0.736 & 0.745 \\
 \end{tabular}
 \label{label-model-score}
 \caption{Model scores}
 \end{table}
 
-Beside performance scores our model returned list of keywords that have the most and the least value for classification. These results are presented in tables bellow. Graphical presetation of tables is included in appendix \hyperref[label-graphs]{graphs section.}
+\noindent Beside performance scores our model returned list of keywords that have the most and the least value for classification. These results are presented in tables bellow. Graphical presetation of tables is included in appendix \hyperref[label-graphs]{graphs section.}
+
+
+\subsection{Postagging}
+%top nouns and adjectives per genre
+
+% slabosti modela
+\subsection{Understanding wrong classifications}
+
+If you look at confusion matrix
 
 \begin{table}[h!]
 \centering
@@ -220,7 +236,7 @@ Here you can find visualization of all results. These files can be found alongsi
 \includegraphics[width=0.8\textwidth]{./img/matrix.png}
 \end{center}
 \caption{Confisuin matrix}
-\label{report}
+\label{label-cf-matrix}
 \end{figure}
 
 \begin{figure}[h]
@@ -228,7 +244,7 @@ Here you can find visualization of all results. These files can be found alongsi
 \includegraphics[width=0.8\textwidth]{./img/pop-keywords.png}
 \end{center}
 \caption{Keywords visualization for pop}
-\label{report}
+\label{label-kw-pop}
 \end{figure}
 
 \begin{figure}[h]
@@ -236,7 +252,7 @@ Here you can find visualization of all results. These files can be found alongsi
 \includegraphics[width=0.8\textwidth]{./img/hip-hop-keywords.png}
 \end{center}
 \caption{Keywords visualization for hip-hop}
-\label{report}
+\label{label-kw-hip-hop}
 \end{figure}
 
 \begin{figure}[h]
@@ -244,7 +260,7 @@ Here you can find visualization of all results. These files can be found alongsi
 \includegraphics[width=0.8\textwidth]{./img/metal-keywords.png}
 \end{center}
 \caption{Keywords visualization for metal}
-\label{report}
+\label{label-kw-metal}
 \end{figure}
 
 %\begin{lstlisting}
