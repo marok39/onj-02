@@ -2,6 +2,7 @@
 
 ## Dataset
 Dataset was obtained on kaggle: [380,000+ lyrics from MetroLyrics dataset](https://www.kaggle.com/gyani95/380000-lyrics-from-metrolyrics).
+Downloaded file is located in  _/input/lyrics.csv_.
 
 ## Repo structure
 
@@ -29,5 +30,5 @@ This script will train a model and plot results.
 
 `python model.py`
 
-If you edited preprocessing_data.py file change file name in model.py to include new data. By default it uses _lyrics_clean_2000.csv_ file
+If you edited preprocessing_data.py file change file name in model.py to include new data. By default it uses _lyrics_clean_2006.csv_ file
 
