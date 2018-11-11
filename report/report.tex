@@ -66,9 +66,9 @@ We searched the internet for appropriate datasets and found many different ones 
 \end{itemize}
 
 \subsection{Data preparation}
-The data we found was stored in a \textit{.csv} file. Because it contained more than \textit{380 000} entries we decided to analyze songs that were released after year 2000 (latest songs in dataset). Afterwards we filtered the songs to match predefined genres which were \textit{hip-hop, pop and metal} and ended up with \textit{68244} different songs. Then we removed songs with lyrics that had less than 100 words and more than 1000 words which removed the outliers in the data.
+The data we found was stored in a \textit{.csv} file. Because it contained more than \textit{380 000} entries we decided to analyze songs that were released after year 2005 (latest songs in dataset). Afterwards we filtered the songs to match predefined genres which were \textit{hip-hop, pop and metal}. Then we removed songs with lyrics that had less than 100 words and more than 1000 words which removed the outliers in the data.
 
-When we finished preparing and selecting the data we focused on text preparation. First we removed special characters from text with regular expressions, converted words to lowercase and removed punctuations. Finally we removed non-english songs. This way we ended up with \textbf{5613} different songs.
+When we finished preparing and selecting the data we focused on text preparation. First we removed special characters from text with regular expressions, converted words to lowercase and removed punctuations. Finally we removed non-english songs. This way we ended up with \textbf{64605} different songs.
 
 \begin{table}[h!]
 \centering
@@ -77,9 +77,9 @@ When we finished preparing and selecting the data we focused on text preparation
 \hline
 \# & Genre & Number of different songs \\
 \hline
-0 & Hip-Hop & 20902 \\
-1 & Metal & 16632 \\
-2 & Pop & 30710 \\
+0 & Hip-Hop & 19574 \\
+1 & Metal & 16187 \\
+2 & Pop & 28844 \\
 \hline
 \end{tabular}
 \caption{Number of songs per genre}
@@ -87,9 +87,9 @@ When we finished preparing and selecting the data we focused on text preparation
 
 In the end we saved the filtered data into a \textit{.csv} file and used it as input in our model class to train our model. You can also use this file to replicate our results.
 
-\section{Model}
+\section{Tools}
 
-To train our model we used a preprocessed file and logistic regression.
+To build our model we used a preprocessed file and logistic regression.
 
 \subsection{Train, test data and metrics}
 % 80 20, regressing 0.2
@@ -109,6 +109,7 @@ In development phase we also played with regularization factor. We used above me
 
 We used several different python libraries. Pandas was used for data structures and data purging. Nltk corpus was used to determine stopwords and for lemmatization. Langdetect library was used to remove non-english lyrics. To build our model we used sklearn and presented results with matplotlib.
 
+\pagebreak
 \section{Algorithm description}
 % describe how we build our model
 
@@ -139,7 +140,7 @@ Before we could interpret our model and it's predictions we had to test it. Test
 \hline
 Accuracy & Precision & Recall & F1 \\
 \hline
-0.736 & 0.769 & 0.736 & 0.745 \\
+0.823 & 0.826 & 0.823 & 0.823 \\
 \hline
 \end{tabular}
 \label{label-model-score}
@@ -153,16 +154,16 @@ Accuracy & Precision & Recall & F1 \\
 \hline
 (+) Keywords & Weight & (-) Keywords & Weight \\
 \hline
-death & 2.14 & love & -3.04 \\
-blood & 1.95 & like & -2.23 \\
-dead & 1.80 & oh & -2.10 \\
-fucking & 1.68 & baby & -2.07 \\
-end & 1.57 & girl & -2.01 \\
-pain & 1.51 & i'm & -1.94 \\
-hate & 1.48 & ain't & -1.93 \\
-lie & 1.47 & yeah & -1.92 \\
-die & 1.44 & got & -1.90 \\
-fear & 1.42 & get & -1.61 \\
+death & 1.97 & love & -2.97 \\
+blood & 1.88 & baby & -2.31 \\
+dead & 1.85 & like & -2.29 \\
+fucking & 1.65 & oh & -2.13 \\
+pain & 1.57 & got & -1.98 \\
+die & 1.56 & girl & -1.96 \\
+end & 1.53 & i'm & -1.95 \\
+lie & 1.46 & ain't & -1.81 \\
+hate & 1.43 & yeah & -1.81 \\
+fear & 1.43 & get & -1.64 \\
 \hline
 \end{tabular}
 \quad
@@ -170,16 +171,16 @@ fear & 1.42 & get & -1.61 \\
 \hline
 (+) Keywords & Weight & (-) Keywords & Weight \\
 \hline
-nigga & 3.90 & i've & -1.27 \\
-shit & 2.72 & eye & -1.11 \\
-ain't & 2.63 & lie & -1.07 \\
-yo & 2.36 & dream & -0.96 \\
-like & 2.32 & nothing & -0.86 \\
-bitch & 2.24 & away & -0.83 \\
-girl & 1.90 & heart & -0.80 \\
-fuck & 1.75 & alone & -0.75 \\
-cause & 1.74 & care & -0.73 \\
-'em & 1.71 & world & -0.71 \\
+nigga & 3.71 & i've & -1.20 \\
+shit & 2.71 & eye & -1.09 \\
+yo & 2.48 & lie & -1.02 \\
+ain't & 2.46 & dream & -0.94 \\
+like & 2.38 & alone & -0.77 \\
+bitch & 2.25 & inside & -0.77 \\
+girl & 1.76 & heart & -0.77 \\
+ya & 1.75 & end & -0.76 \\
+cause & 1.69 & there's & -0.75 \\
+got & 1.67 & away & -0.75 \\
 \hline
 \end{tabular}
 \caption{Keywords for: \textbf{metal} (left) \& \textbf{hip-hop} (right)}
@@ -192,57 +193,197 @@ cause & 1.74 & care & -0.73 \\
 \hline
 (+) Keywords & Weight & (-) Keywords & Weight \\
 \hline
-love & 2.17 & nigga & -2.47 \\
-oh & 1.85 & shit & -2.45 \\
-heart & 1.58 & fuck & -2.21 \\
-boy & 1.32 & death & -1.85 \\
-gonna & 1.22 & fucking & -1.72 \\
-baby & 1.06 & dead & -1.65 \\
-blue & 1.05 & blood & -1.53 \\
-'cause & 1.03 & bitch & -1.49 \\
-could & 1.00 & die & -1.47 \\
-kiss & 0.99 & hate & -1.40 \\
+love & 2.29 & nigga & -2.45 \\
+oh & 1.93 & shit & -2.41 \\
+heart & 1.56 & fuck & -2.14 \\
+gonna & 1.29 & death & -1.76 \\
+boy & 1.22 & fucking & -1.66 \\
+baby & 1.16 & dead & -1.61 \\
+'cause & 1.10 & die & -1.57 \\
+could & 1.01 & bitch & -1.55 \\
+there's & 0.97 & blood & -1.43 \\
+kiss & 0.97 & hate & -1.37 \\
 \hline
 \end{tabular}
 \caption{Keywords for \textbf{pop}}
 \end{table}
 
-
-%\begin{table}[h!]
-%\centering
-%\label{baseline}
-%\begin{tabular}{cccc}
-%\end{tabular}
-%\caption{Keywords for hip-hop}
-%\end{table}
-
-\subsection{Postagging}
+\subsection{POS tagging}
 %top nouns and adjectives per genre
 
-\begin{table}[h!]
-\begin{tabular}{|lc|}
-\hline
-
-\hline
-\end{tabular}
-\quad
-\begin{tabular}{|lc|lc|}
-\hline
-
-\hline
-\end{tabular}
-\caption{Nouns for: \textbf{metal} (left) \& \textbf{hip-hop} (right)}
-\end{table}
+To gain further insight into our model's keywords we decided to POS tag them.
+We extracted the 10 most (+) significant nouns, adjectives and verbs for each genre.
+The resulting words are visible in the tables \hyperref[label-hip-hop-pos]{5}, \hyperref[label-metal-pos]{6} and \hyperref[label-pop-pos]{7} below.
+We find the results not to be surprising, especially the nouns are something that should be recognizable to each fan of the genres (and also confirm certain stereotypes we have about the genres).
 
 \begin{table}[h!]
 \centering
-\label{baseline}
-\begin{tabular}{|lc|}
+\begin{tabular}{|l|c|}
 \hline
-
+Top verbs & Weight \\
+\hline
+got & 1.67 \\
+get & 1.67 \\
+keep & 0.68 \\
+go & 0.62 \\
+hundred & 0.57 \\
+said & 0.54 \\
+know & 0.54 \\
+started & 0.45 \\
+came & 0.44 \\
+slow & 0.41 \\
 \hline
 \end{tabular}
-\caption{Nouns for \textbf{pop}}
+\quad
+\begin{tabular}{|l|c|}
+\hline
+Top nouns & Weight \\
+\hline
+nigga & 3.71 \\
+shit & 2.71 \\
+yo & 2.48 \\
+ain't & 2.46 \\
+bitch & 2.25 \\
+girl & 1.76 \\
+ya & 1.75 \\
+cause & 1.69 \\
+'em & 1.66 \\
+i'm & 1.66 \\
+\hline
+\end{tabular}
+\quad
+\begin{tabular}{|l|c|}
+\hline
+Top adjectives & Weight \\
+\hline
+whole & 0.91 \\
+big & 0.82 \\
+real & 0.79 \\
+black & 0.60 \\
+fresh & 0.49 \\
+high & 0.48 \\
+low & 0.48 \\
+nice & 0.45 \\
+next & 0.42 \\
+new & 0.41 \\
+\hline
+\end{tabular}
+\caption{Hip-hop POS tagging}
+\label{label-hip-hop-pos}
+\end{table}
+
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|l|c|}
+\hline
+Top verbs & Weight \\
+\hline
+fucking & 1.65 \\
+dying & 0.83 \\
+hatred & 0.67 \\
+lost & 0.66 \\
+forced & 0.60 \\
+suffering & 0.58 \\
+killing & 0.57 \\
+damned & 0.56 \\
+wing & 0.51 \\
+screaming & 0.50 \\
+\hline
+\end{tabular}
+\quad
+\begin{tabular}{|l|c|}
+\hline
+Top nouns & Weight \\
+\hline
+death & 1.97 \\
+blood & 1.88 \\
+pain & 1.57 \\
+die & 1.56 \\
+end & 1.53 \\
+lie & 1.46 \\
+hate & 1.43 \\
+fear & 1.43 \\
+soul & 1.36 \\
+hell & 1.30 \\
+\hline
+\end{tabular}
+\quad
+\begin{tabular}{|l|c|}
+\hline
+Top adjectives & Weight \\
+\hline
+dead & 1.85 \\
+final & 1.14 \\
+eternal & 0.91 \\
+alive & 0.69 \\
+black & 0.61 \\
+empty & 0.54 \\
+unknown & 0.51 \\
+false & 0.50 \\
+free & 0.49 \\
+last & 0.48 \\
+\hline
+\end{tabular}
+\caption{Metal POS tagging}
+\label{label-metal-pos}
+\end{table}
+
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|l|c|}
+\hline
+Top verbs & Weight \\
+\hline
+know & 0.90 \\
+say & 0.80 \\
+loving & 0.73 \\
+darling & 0.68 \\
+find & 0.63 \\
+feeling & 0.61 \\
+believe & 0.59 \\
+go & 0.58 \\
+let & 0.56 \\
+dancing & 0.55 \\
+\hline
+\end{tabular}
+\quad
+\begin{tabular}{|l|c|}
+\hline
+Top nouns & Weight \\
+\hline
+love & 2.29 \\
+oh & 1.93 \\
+heart & 1.56 \\
+gonna & 1.29 \\
+boy & 1.22 \\
+baby & 1.16 \\
+'cause & 1.10 \\
+there's & 0.97 \\
+kiss & 0.97 \\
+ooh & 0.96 \\
+\hline
+\end{tabular}
+\quad
+\begin{tabular}{|l|c|}
+\hline
+Top adjectives & Weight \\
+\hline
+little & 0.76 \\
+easy & 0.53 \\
+happy & 0.51 \\
+good & 0.45 \\
+small & 0.39 \\
+lucky & 0.32 \\
+much & 0.28 \\
+tiny & 0.26 \\
+old & 0.24 \\
+impossible & 0.23 \\
+\hline
+\end{tabular}
+\caption{Pop POS tagging}
+\label{label-pop-pos}
 \end{table}
 
 % slabosti modela
