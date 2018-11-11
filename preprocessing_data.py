@@ -7,7 +7,7 @@ from langdetect import detect
 
 PRESELECTED_GENRES = ['Hip-Hop', 'Pop', 'Metal']
 BLACKLIST_GENRES = ['Other', 'Electronic', 'Not Available']
-YEAR = 2000
+YEAR = 2006
 
 
 class PreprocessingData:
