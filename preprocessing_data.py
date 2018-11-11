@@ -30,8 +30,8 @@ class PreprocessingData:
         df = pd.read_csv(self.data)
 
         # REDUCE DATA FRAME SIZE
-        print("Getting songs from 2015 onward...")
-        # select song from 2015 onward
+        print("Getting songs from %d onward..." % YEAR)
+        # select song from YEAR onward
         df = df.loc[df['year'] >= YEAR]
         # Remove Other and Not available
         df = df.loc[~df['genre'].isin(BLACKLIST_GENRES)]
@@ -79,9 +79,6 @@ class PreprocessingData:
 
         # drop non-english songs
         df_new = df_new.drop(df_new.index[index_to_drop])
-
-        # df_new['language'] = df_new['lyrics'].apply(lambda x: detect(x[:100]))
-        # df_new = df_new.loc[df_new['language'] == 'en']
 
         # Print data results
         print("\n----------------------------------------------------\n")
