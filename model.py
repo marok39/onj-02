@@ -29,7 +29,7 @@ class Model(LogisticRegression):
 
         keywords = {}
         for class_index in range(self.coef_.shape[0]):
-            word_coef = [(word, index_to_word[i]) for i, word in enumerate(self.coef_[class_index])]
+            word_coef = [(coef, index_to_word[i]) for i, coef in enumerate(self.coef_[class_index])]
             sorted_coef = sorted(word_coef, key=lambda x: x[0], reverse=True)
             top = sorted(sorted_coef[:n], key=lambda x: x[0])
             bottom = sorted_coef[-n:]
@@ -60,7 +60,7 @@ class Model(LogisticRegression):
 
     def plot_confusion_matrix(self, y_test, y_predicted):
         cm = confusion_matrix(y_test, y_predicted)
-        plot = plot_confusion_matrix(cm, classes=self.classes_, normalize=False)
+        plot_confusion_matrix(cm, classes=self.classes_, normalize=False)
 
     def plot_keywords(self):
         keywords = self.get_keywords(n=10)
@@ -82,28 +82,45 @@ class Model(LogisticRegression):
             for el in zip(top, bottom):
                 print("%s & %.2f & %s & %.2f \\\\" % (el[0][1], el[0][0], el[1][1], el[1][0]))
 
+    def test_model(self, data, labels, n=1, seed=None):
+        """Print average metrics over n iterations."""
+        a_sum, p_sum, r_sum, f_sum = 0, 0, 0, 0
+
+        for i in range(n):
+            # train model
+            X_train, X_test, y_train, y_test = train_test_split(data, labels, test_size=0.2, random_state=seed)
+            X_train = self.vectorize_data(X_train)
+            model.fit(X_train, y_train)
+
+            # predict genres
+            X_test = self.vectorizer.transform(X_test)
+            y_predicted = self.predict(X_test)
+
+            a, p, r, f = self.get_metrics(y_test, y_predicted)
+            a_sum += a
+            p_sum += p
+            r_sum += r
+            f_sum += f
+
+        print('Average over %d iterations: acc = %.3f, prec = %.3f, rec = %.3f, f1 = %.3f' %
+              (n, a_sum/n, p_sum/n, r_sum/n, f_sum/n))
+
+        return y_test, y_predicted
+
 
 if __name__ == '__main__':
     # model init
-    model = Model(C=1.0, class_weight='balanced', solver='lbfgs', multi_class='multinomial', max_iter=200)  # solver='newton-cg'
-    df = pd.read_csv('./input/lyrics_clean_2015_2016.csv')
+    model = Model(C=1e-1, class_weight='balanced', solver='lbfgs', multi_class='multinomial', max_iter=200)
+    df = pd.read_csv('./input/lyrics_clean_2014.csv')
     #pp = PreprocessingData(data='./input/lyrics.csv')
     #df = pp.clean_data()
 
     list_genres = df['genre'].tolist()
     list_lyrics = df['lyrics'].tolist()
 
-    # train model
-    X_train, X_test, y_train, y_test = train_test_split(list_lyrics, list_genres, test_size=0.2, random_state=123)
-    X_train = model.vectorize_data(X_train)
-    model.fit(X_train, y_train)
-
-    # predict genres
-    X_test = model.vectorizer.transform(X_test)
-    y_predicted = model.predict(X_test)
+    y_test, y_predicted = model.test_model(list_lyrics, list_genres, n=2)
 
     # plot model
-    model.get_metrics(y_test, y_predicted)
     model.plot_confusion_matrix(y_test, y_predicted)
     model.plot_keywords()
     model.keywords_table()

@@ -7,7 +7,8 @@ from langdetect import detect
 
 PRESELECTED_GENRES = ['Hip-Hop', 'Pop', 'Metal']
 BLACKLIST_GENRES = ['Other', 'Electronic', 'Not Available']
-YEAR = 2015
+YEAR = 2006
+
 
 class PreprocessingData:
     def __init__(self, data=None):
@@ -63,6 +64,7 @@ class PreprocessingData:
         df_new['lyrics'] = df_new['lyrics'].str.lower()
         # remove punctuations
         df_new['lyrics'] = df_new['lyrics'].str.replace('[^\w\s^\']', '')
+        df_new['lyrics'] = df_new['lyrics'].astype('U')
 
         # select only english lyrics
         print("Filtering non-english songs (needs ~40 seconds)...")
@@ -70,13 +72,13 @@ class PreprocessingData:
         for i, row in enumerate(df_new.itertuples(index=True, name='Pandas')):
             try:
                 # if detect(getattr(row, "lyrics")[:200]) != 'en' or detect(getattr(row, "lyrics")[200:400]) != 'en':
-                if detect(getattr(row, "lyrics")[:400]) != 'en':
+                if detect(getattr(row, "lyrics")[:200]) != 'en':
                     index_to_drop.append(i)
             except:
                 index_to_drop.append(i)
 
         # drop non-english songs
-        df_new.drop(df_new.index[index_to_drop])
+        df_new = df_new.drop(df_new.index[index_to_drop])
 
         # df_new['language'] = df_new['lyrics'].apply(lambda x: detect(x[:100]))
         # df_new = df_new.loc[df_new['language'] == 'en']
@@ -107,4 +109,3 @@ class PreprocessingData:
 if __name__ == '__main__':
     pp = PreprocessingData('./input/lyrics.csv')
     df = pp.clean_data()
-
