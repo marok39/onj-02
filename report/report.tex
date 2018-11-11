@@ -49,14 +49,14 @@ Analysis of song lyrics to match genre \\
 
 \section{NLP task}
 % A paragraph of an NLP task/idea that you solved. A short description of your solution and related work in the field.
-For our assignment we decided to analyze song lyrics, extract keywords that correspond to specific genres and try to classify song by its lyrics to corresponding genre. First we found a \href{https://www.kaggle.com/gyani95/380000-lyrics-from-metrolyrics}{\textit{dataset}} that contained song lyrics. We preprocessed data, trained and tested a model and presented results with tables and graphs. Some similar solutions already exist but perform similar task with neural networks or some other more complex methods. With this assignment we wanted to find out if our approach can provide satisfactory results by using simple natural language processing techniques.
+For our assignment we decided to analyze song lyrics, extract keywords that correspond to specific genres and try to classify song by its lyrics to corresponding genre. First we found a \href{https://www.kaggle.com/gyani95/380000-lyrics-from-metrolyrics}{\textit{dataset}} that contained song lyrics, then we preprocessed the data, trained and tested a model and presented results with tables and graphs. Some similar solutions already exist, but perform similar task with neural networks or some other more complex methods. With this assignment we wanted to find out if our approach can provide satisfactory results by using simple natural language processing techniques.
 
 \section{Data}
 % A description of (train, development, test) data or its retrieval
 % Also describe metrics, used to score the performance of your algorithms.
 We searched the internet for appropriate datasets and found many different ones but in the end decided to use \href{https://www.kaggle.com/gyani95/380000-lyrics-from-metrolyrics}{\textit{380,000+ lyrics from MetroLyrics dataset}} found on kaggle portal. This dataset had the attributes we needed to solve our task.
 
-\noindent Dataset contained following attributes:
+\noindent The dataset contained the following attributes:
 \begin{itemize}
 \item song title,
 \item year,
@@ -66,9 +66,9 @@ We searched the internet for appropriate datasets and found many different ones 
 \end{itemize}
 
 \subsection{Data preparation}
-Data we found was stored in \textit{.csv} file. Because it contained more than \textit{380 000} entries we decided to analyze songs that we're released after 2000 (latest songs in dataset). Afterwards we filtered songs to match predefind genres. We selected \textit{hip-hop, pop  and metal} and ended up with \textit{68244} different songs. Then we removed lyrics that we're shorter than 100 words and longer than 1000 words. This way we removed outliers in data.
+The data we found was stored in a \textit{.csv} file. Because it contained more than \textit{380 000} entries we decided to analyze songs that were released after year 2000 (latest songs in dataset). Afterwards we filtered the songs to match predefined genres which were \textit{hip-hop, pop and metal} and ended up with \textit{68244} different songs. Then we removed songs with lyrics that had less than 100 words and more than 1000 words which removed the outliers in the data.
 
-When we finished data preparation and selection we focused on the text preparation. First we removed special characters from text with regular expressions, converted words to lowercase and removed punctuations. Finally we removed non-english songs. This way we ended up with \textbf{5613} different songs.
+When we finished preparing and selecting the data we focused on text preparation. First we removed special characters from text with regular expressions, converted words to lowercase and removed punctuations. Finally we removed non-english songs. This way we ended up with \textbf{5613} different songs.
 
 \begin{table}[h!]
 \centering
@@ -85,11 +85,11 @@ When we finished data preparation and selection we focused on the text preparati
 \caption{Number of songs per genre}
 \end{table}
 
-In the end we saved filtered data into \textit{.csv} file. In our model class we used this file as input to train our model. You can also use this file to replicate our results.
+In the end we saved the filtered data into a \textit{.csv} file and used it as input in our model class to train our model. You can also use this file to replicate our results.
 
 \section{Model}
 
-To train our model we used preprocessed file. Model is build with logistic regression.
+To train our model we used a preprocessed file and logistic regression.
 
 \subsection{Train, test data and metrics}
 % 80 20, regressing 0.2
@@ -102,12 +102,12 @@ To train our model we used 80\% of data and 20\% to test our model. To measure s
 \item and f1 score.
 \end{itemize}
 
-In development phase we also played with regularization factor. We used above mentioned metrics to determine best regularization factor. In the end we set it to 0.1.
+In development phase we also played with regularization factor. We used above mentioned metrics to determine the best regularization factor. In the end we set it to 0.1.
 
 \subsection{Resources, tools and corpora}
 %A description of tools and resources used. A list of additional linguistic corpora and how it was used to improve results of your algorithm
 
-We used several different python libraries. Pandas was used for data structures and data purging. Nltk corpus was used to determine stopwords and for lematization. Langdetect library was used to remove non-english lyrics. To build our model we used sklearn and preseted results with matplotlib.
+We used several different python libraries. Pandas was used for data structures and data purging. Nltk corpus was used to determine stopwords and for lemmatization. Langdetect library was used to remove non-english lyrics. To build our model we used sklearn and presented results with matplotlib.
 
 \section{Algorithm-Model description}
 % describe how we build our model
@@ -121,7 +121,7 @@ Bag of words is an algorithm that counts how many times a word appears in a docu
 \section{Results}
 % interpretacija modela, kaj je primerom skupno, zakaj pride do napačne klasifikacije
 
-Before we could interprete our model and it's predictions we had to test it. Testing phase consisted of 10 iterations. In each iteration we sampled data with different random seed, trained a model and tested it on sampled test data. In the end we averaged all metrics to score performance of our model. You can find results in \hyperref[label-model-score]{table} bellow.
+Before we could interpret our model and it's predictions we had to test it. Testing phase consisted of 10 iterations. In each iteration we sampled the data with different random seeds, trained a model and tested it on sampled test data. In the end we averaged all metrics to score the performance of our model. You can find the results in the \hyperref[label-model-score]{table} bellow.
 
 \begin{table}[h!]
 \centering
@@ -137,7 +137,7 @@ Accuracy & Precision & Recall & F1 \\
 \caption{Model scores}
 \end{table}
 
-\noindent Beside performance scores our model returned list of keywords that have the most and the least value for classification. These results are presented in tables bellow. Graphical presetation of tables is included in appendix \hyperref[label-graphs]{graphs section.}
+\noindent Beside performance scores our model returned a list of keywords that have the most and the least value for classification. These results are presented in the tables bellow. Graphical presentation of tables is included in the appendix \hyperref[label-graphs]{graphs section.}
 
 \begin{table}[h!]
 \begin{tabular}{|lc|lc|}
@@ -239,9 +239,9 @@ kiss & 0.99 & hate & -1.40 \\
 % slabosti modela
 \subsection{Understanding wrong classifications}
 
-If you look at confusion matrix \hyperref[label-cf-matrix]{confusion matrix} you can notice that most commongly missclassified songs are pop songs. We didn't expect to classify every song correctly, but pop songs have larger error rate than metal or hip-hop songs. We tried to understand why this happens. Our hypothesis was that many pop songs artist feature artist from hip-hop or metal.
+If you look at our \hyperref[label-cf-matrix]{confusion matrix} you can notice that most commonly miss-classified songs are pop songs. We didn't expect to classify every song correctly, but pop songs have larger error rate than metal or hip-hop songs. We tried to understand why this was happening and our hypothesis was that many pop song artists feature artists from hip-hop or metal and therefore correlate with actual hip-hop and metal songs.
 
-To test this we extracted songs that we not correctly classified. Afterwards we checked if song title contains word featuring or ft or feat. We counted percentage of these songs. You can see results in table bellow.
+To test this we extracted songs that were not correctly classified. Afterwards we checked if song titles contained words \textit{"featuring"} or \textit{"ft"} or \textit{"feat"}. We counted the percentage of these songs and you can see results in the table bellow.
 
 
 \section{Conclusion}
@@ -255,13 +255,13 @@ Github repository: \href{https://github.com/marok39/onj-02}{https://github.com/m
 \appendixpage
 \section{\label{label-graphs} Graphs}
 
-Here you can find visualization of all results. These files can be found alongside report in /img directory.
+Here you can find the visualization of all results. These files can be found alongside the report in \textit{/img} directory.
 
 \begin{figure}[h]
 \begin{center}
 \includegraphics[width=0.8\textwidth]{./img/matrix.png}
 \end{center}
-\caption{Confisuin matrix}
+\caption{Confusion matrix}
 \label{label-cf-matrix}
 \end{figure}
 
