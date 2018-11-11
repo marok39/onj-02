@@ -66,20 +66,21 @@ We searched the internet for appropriate dataset. We found many different but in
 \end{itemize}
 
 \subsection{Data preparation}
-Data we found was stored in \textit{.csv} file. Because it contained more than \textit{380 000} entries we decided to analyze songs that we're released in 2016 (latest songs in dataset). Afterwards we filtered songs to match predefind genres. We selected \textit{hip-hop, pop  and metal} and ended up with \textit{6845} different songs. Then we removed lyrics that we're shorter than 100 words and longer than 1000 words. This way we removed outliers in data.
+Data we found was stored in \textit{.csv} file. Because it contained more than \textit{380 000} entries we decided to analyze songs that we're released after 2000 (latest songs in dataset). Afterwards we filtered songs to match predefind genres. We selected \textit{hip-hop, pop  and metal} and ended up with \textit{68244} different songs. Then we removed lyrics that we're shorter than 100 words and longer than 1000 words. This way we removed outliers in data.
 
 When we finished data preparation and selection we focused on the text preparation. First we removed special characters from text with regular expressions, converted words to lowercase and removed punctuations. Finally we removed non-english songs. This way we ended up with \textbf{5613} different songs.
 
 \begin{table}[h!]
 \centering
 \label{baseline}
-\begin{tabular}{clc}
+\begin{tabular}{|clc|}
 \hline
 \# & Genre & Number of different songs \\
 \hline
-0 & Hip-Hop & 2180 \\
-1 & Metal & 814 \\
-2 & Pop & 2619 \\
+0 & Hip-Hop & 20902 \\
+1 & Metal & 16632 \\
+2 & Pop & 30710 \\
+\hline
 \end{tabular}
 \caption{Number of songs per genre}
 \end{table}
@@ -101,7 +102,7 @@ To train our model we used 80\% of data and 20\% to test our model. To measure s
 \item and f1 score.
 \end{itemize}
 
-In development phase we also played with regularization factor. We used above mentioned metrics to determine best regularization factor. In the end we set it to 1 (TODO UPDATE TO PROPER VALUE).
+In development phase we also played with regularization factor. We used above mentioned metrics to determine best regularization factor. In the end we set it to 0.1.
 
 \subsection{Resources, tools and corpora}
 %A description of tools and resources used. A list of additional linguistic corpora and how it was used to improve results of your algorithm
@@ -116,7 +117,7 @@ We used several different python libraries. Pandas was used for data structures 
 \subsection{Building bag of words with TF-IDF}
 Bag of words is an algorithm that counts how many times a word appears in a document. We used WhitespaceTokenizer function from the ntlk library to tokenize our song lyrics and removed all the stop words, because words such as \textit{"and"} or \textit{"the"} appear frequently in all songs and are systematically discounted. Then we used the WordNetLemmatizer function also from the nltk library to lemmatize the text which grouped together the different inflected forms of a word so they can be analyzed as a single item. After that we vectorized our data with TF-IDF function called TfidfVectorizer from sklearn which measured the number of times words appeared in a given song (term frequency). The more songs a word appears in, the less valuable that word is as a signal. That’s intended to leave only the frequent AND distinctive words as markers. Each word’s TF-IDF relevance is a normalized data format that also adds up to one.
 
-\pagebreak
+
 \section{Results}
 % interpretacija modela, kaj je primerom skupno, zakaj pride do napačne klasifikacije
 
@@ -125,11 +126,12 @@ Before we could interprete our model and it's predictions we had to test it. Tes
 \begin{table}[h!]
 \centering
 \label{baseline}
-\begin{tabular}{cccc}
+\begin{tabular}{|c|c|c|c|}
 \hline
-Accuracy & Precision & recall & f1 \\
+Accuracy & Precision & Recall & F1 \\
 \hline
 0.736 & 0.769 & 0.736 & 0.745 \\
+\hline
 \end{tabular}
 \label{label-model-score}
 \caption{Model scores}
@@ -137,76 +139,63 @@ Accuracy & Precision & recall & f1 \\
 
 \noindent Beside performance scores our model returned list of keywords that have the most and the least value for classification. These results are presented in tables bellow. Graphical presetation of tables is included in appendix \hyperref[label-graphs]{graphs section.}
 
-
-\subsection{Postagging}
-%top nouns and adjectives per genre
-
-% slabosti modela
-\subsection{Understanding wrong classifications}
-
-If you look at confusion matrix
-
 \begin{table}[h!]
-\centering
-\label{baseline}
-\begin{tabular}{cccc}
+\begin{tabular}{|lc|lc|}
 \hline
-+ Keywords & Weight & - Keywords & Weight \\
+(+) Keywords & Weight & (-) Keywords & Weight \\
 \hline
-love & 1.60 & nigga & -2.95 \\
-heart & 1.46 & shit & -2.17 \\
-good & 1.28 & fuck & -2.15 \\
-oh & 1.21 & bitch & -2.00 \\
-miss & 1.18 & end & -1.84 \\
-boy & 1.17 & dead & -1.59 \\
-hurt & 1.07 & hell & -1.44 \\
-blue & 1.03 & death & -1.38 \\
-hey & 1.02 & die & -1.20 \\
-goodbye & 1.00 & yo & -1.19 \\
+death & 2.14 & love & -3.04 \\
+blood & 1.95 & like & -2.23 \\
+dead & 1.80 & oh & -2.10 \\
+fucking & 1.68 & baby & -2.07 \\
+end & 1.57 & girl & -2.01 \\
+pain & 1.51 & i'm & -1.94 \\
+hate & 1.48 & ain't & -1.93 \\
+lie & 1.47 & yeah & -1.92 \\
+die & 1.44 & got & -1.90 \\
+fear & 1.42 & get & -1.61 \\
+\hline
 \end{tabular}
-\caption{Keywords for pop}
+\quad
+\begin{tabular}{|lc|lc|}
+\hline
+(+) Keywords & Weight & (-) Keywords & Weight \\
+\hline
+nigga & 3.90 & i've & -1.27 \\
+shit & 2.72 & eye & -1.11 \\
+ain't & 2.63 & lie & -1.07 \\
+yo & 2.36 & dream & -0.96 \\
+like & 2.32 & nothing & -0.86 \\
+bitch & 2.24 & away & -0.83 \\
+girl & 1.90 & heart & -0.80 \\
+fuck & 1.75 & alone & -0.75 \\
+cause & 1.74 & care & -0.73 \\
+'em & 1.71 & world & -0.71 \\
+\hline
+\end{tabular}
+\caption{Keywords for: \textbf{metal} (left) \& \textbf{hip-hop} (right)}
 \end{table}
 
 \begin{table}[h!]
 \centering
 \label{baseline}
-\begin{tabular}{cccc}
+\begin{tabular}{|lc|lc|}
 \hline
-+ Keywords & Weight & - Keywords & Weight \\
+(+) Keywords & Weight & (-) Keywords & Weight \\
 \hline
-end & 2.46 & love & -2.49 \\
-dead & 2.18 & like & -2.19 \\
-hell & 1.77 & got & -2.01 \\
-death & 1.76 & ain't & -1.99 \\
-nothing & 1.65 & baby & -1.81 \\
-fear & 1.52 & yeah & -1.77 \\
-lie & 1.50 & nigga & -1.48 \\
-eye & 1.45 & good & -1.39 \\
-die & 1.38 & boy & -1.35 \\
-memory & 1.37 & girl & -1.32 \\
+love & 2.17 & nigga & -2.47 \\
+oh & 1.85 & shit & -2.45 \\
+heart & 1.58 & fuck & -2.21 \\
+boy & 1.32 & death & -1.85 \\
+gonna & 1.22 & fucking & -1.72 \\
+baby & 1.06 & dead & -1.65 \\
+blue & 1.05 & blood & -1.53 \\
+'cause & 1.03 & bitch & -1.49 \\
+could & 1.00 & die & -1.47 \\
+kiss & 0.99 & hate & -1.40 \\
+\hline
 \end{tabular}
-\caption{Keywords for metal}
-\end{table}
-
-\begin{table}[h!]
-\centering
-\label{baseline}
-\begin{tabular}{cccc}
-\hline
-+ Keywords & Weight & - Keywords & Weight \\
-\hline
-nigga & 4.42 & nothing & -1.36 \\
-ain't & 2.92 & forget & -1.32 \\
-bitch & 2.34 & world & -1.21 \\
-shit & 2.13 & i've & -1.13 \\
-got & 2.11 & angel & -0.97 \\
-fuck & 1.99 & believe & -0.95 \\
-gon' & 1.87 & light & -0.95 \\
-like & 1.81 & memory & -0.90 \\
-money & 1.66 & we'll & -0.89 \\
-man & 1.54 & care & -0.88 \\
-\end{tabular}
-\caption{Keywords for hip-hop}
+\caption{Keywords for \textbf{pop}}
 \end{table}
 
 
@@ -218,11 +207,50 @@ man & 1.54 & care & -0.88 \\
 %\caption{Keywords for hip-hop}
 %\end{table}
 
-\pagebreak
+\subsection{Postagging}
+%top nouns and adjectives per genre
+
+\begin{table}[h!]
+\begin{tabular}{|lc|}
+\hline
+
+\hline
+\end{tabular}
+\quad
+\begin{tabular}{|lc|lc|}
+\hline
+
+\hline
+\end{tabular}
+\caption{Nouns for: \textbf{metal} (left) \& \textbf{hip-hop} (right)}
+\end{table}
+
+\begin{table}[h!]
+\centering
+\label{baseline}
+\begin{tabular}{|lc|}
+\hline
+
+\hline
+\end{tabular}
+\caption{Nouns for \textbf{pop}}
+\end{table}
+
+% slabosti modela
+\subsection{Understanding wrong classifications}
+
+If you look at confusion matrix \hyperref[label-cf-matrix]{confusion matrix} you can notice that most commongly missclassified songs are pop songs. We didn't expect to classify every song correctly, but pop songs have larger error rate than metal or hip-hop songs. We tried to understand why this happens. Our hypothesis was that many pop songs artist feature artist from hip-hop or metal.
+
+To test this we extracted songs that we not correctly classified. Afterwards we checked if song title contains word featuring or ft or feat. We counted percentage of these songs. You can see results in table bellow.
+
+
+\section{Conclusion}
+
+
 \section{Github repository}
 Github repository: \href{https://github.com/marok39/onj-02}{https://github.com/marok39/onj-02}
 
-
+\pagebreak
 \appendix
 \appendixpage
 \section{\label{label-graphs} Graphs}

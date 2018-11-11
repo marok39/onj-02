@@ -124,3 +124,6 @@ venv.bak/
 *.synctex.gz
 *.synctex.gz(busy)
 *.pdfsync
+
+# ignore idea
+.idea
