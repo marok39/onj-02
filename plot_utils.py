@@ -76,6 +76,8 @@ def plot_keywords(top, bottom, name):
 
     top_scores, top_words = zip(*top)
     bottom_scores, bottom_words = zip(*bottom)
+    top_words = [a for a, b in top_words]
+    bottom_words = [a for a, b in bottom_words]
 
     fig = plt.figure(figsize=(10, 10))
 
